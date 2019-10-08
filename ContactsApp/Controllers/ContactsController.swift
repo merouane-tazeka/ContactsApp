@@ -26,6 +26,7 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     
     func setupNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddButton))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Options", style: .plain, target: self, action: #selector(handleOptionButton))
         navigationItem.title = "Contacts"
     }
     
@@ -69,7 +70,7 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     //MARK: - Button Methods
-    @objc func handleAddButton() {
+    @objc private func handleAddButton() {
         
         let addContactController = AddContactController()
         addContactController.delegate = self
@@ -79,6 +80,36 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
         
         present(navController, animated: true, completion: nil)
         
+    }
+    
+    @objc private func handleOptionButton() {
+        
+        let alert = UIAlertController(title: "Select an option", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Delete all contacts", style: .default, handler: handlerDeleteAll))
+        
+        present(alert, animated: true)
+    }
+    
+    @objc private func handlerDeleteAll(action: UIAlertAction) {
+        
+        let context = CoreDataManager.shared.persistantContainer.viewContext
+        
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: Person.fetchRequest())
+        do {
+            try context.execute(batchDeleteRequest)
+            
+            var indexPathToRemove = [IndexPath]()
+            
+            for (index, _) in contacts.enumerated() {
+                let indexPath = IndexPath(item: index, section: 0)
+                indexPathToRemove.append(indexPath)
+            }
+            contacts.removeAll()
+            collectionView.deleteItems(at: indexPathToRemove)
+            
+        } catch let deleteErr {
+            print("Failed deleting contacts from database: ", deleteErr)
+        }
     }
     
     //MARK: - Other Methods
@@ -104,17 +135,8 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
         let newContact = contact
         
         contacts.append(newContact)
-        
         let newIndexPath = IndexPath(item: contacts.count - 1, section: 0)
         collectionView.insertItems(at: [newIndexPath])
     }
-    
-//    func createContacts() {
-//           contacts = [Person]()
-//           let person1 = PersonModel(name: "Merouane", surname: "Tazeka")
-//           let person2 = PersonModel(name: "Islam", surname: "Ouelhi")
-//           contacts?.append(person1)
-//           contacts?.append(person2)
-//    }
 }
 

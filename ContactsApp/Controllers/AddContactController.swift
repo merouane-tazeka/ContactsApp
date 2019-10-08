@@ -13,12 +13,13 @@ protocol AddContactControllerDelegate {
     func didAddContact(contact: Person)
 }
 
-class AddContactController: UIViewController {
+class AddContactController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var delegate : AddContactControllerDelegate?
     
     lazy var coverImageView: UIImageView = {
         let iv = UIImageView()
+        iv.image = UIImage(named: "user")
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.isUserInteractionEnabled = true
         iv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageGesture)))
@@ -36,7 +37,7 @@ class AddContactController: UIViewController {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Name: "
+        label.text = "First Name: "
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -44,23 +45,54 @@ class AddContactController: UIViewController {
     
     let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "enter name (required)"
+        textField.placeholder = "Enter First Name (required)"
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
     
-    let surnameLabel: UILabel = {
+    let lastNameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Surname: "
+        label.text = "Last Name: "
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    let lastNameTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Enter Last Name"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
     }()
     
     let phoneLabel: UILabel = {
         let label = UILabel()
         label.text = "Phone Number: "
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    let phoneTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Phone Number"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    let emailLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Email: "
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let emailTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Email Address"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
     }()
     
     override func viewDidLoad() {
@@ -94,7 +126,7 @@ class AddContactController: UIViewController {
         view.addSubview(nameLabel)
         nameLabel.topAnchor.constraint(equalTo: tapToChoosePictureLabel.bottomAnchor, constant: 30).isActive = true
         nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
-        nameLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        nameLabel.widthAnchor.constraint(equalToConstant: 125).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         view.addSubview(nameTextField)
@@ -102,6 +134,42 @@ class AddContactController: UIViewController {
         nameTextField.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 10).isActive = true
         nameTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
         nameTextField.bottomAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
+        
+        view.addSubview(lastNameLabel)
+        lastNameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8).isActive = true
+        lastNameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
+        lastNameLabel.widthAnchor.constraint(equalTo: nameLabel.widthAnchor, constant: 0).isActive = true
+        lastNameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        view.addSubview(lastNameTextField)
+        lastNameTextField.topAnchor.constraint(equalTo: lastNameLabel.topAnchor, constant: 0).isActive = true
+        lastNameTextField.leftAnchor.constraint(equalTo: lastNameLabel.rightAnchor, constant: 10).isActive = true
+        lastNameTextField.rightAnchor.constraint(equalTo: nameTextField.rightAnchor, constant: 0).isActive = true
+        lastNameTextField.bottomAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 0).isActive = true
+        
+        view.addSubview(phoneLabel)
+        phoneLabel.topAnchor.constraint(equalTo: lastNameLabel.bottomAnchor, constant: 8).isActive = true
+        phoneLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
+        phoneLabel.widthAnchor.constraint(equalTo: nameLabel.widthAnchor, constant: 0).isActive = true
+        phoneLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+        view.addSubview(phoneTextField)
+        phoneTextField.topAnchor.constraint(equalTo: phoneLabel.topAnchor, constant: 0).isActive = true
+        phoneTextField.leftAnchor.constraint(equalTo: phoneLabel.rightAnchor, constant: 10).isActive = true
+        phoneTextField.rightAnchor.constraint(equalTo: nameTextField.rightAnchor, constant: 0).isActive = true
+        phoneTextField.bottomAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: 0).isActive = true
+        
+        view.addSubview(emailLabel)
+        emailLabel.topAnchor.constraint(equalTo: phoneLabel.bottomAnchor, constant: 8).isActive = true
+        emailLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
+        emailLabel.widthAnchor.constraint(equalTo: nameLabel.widthAnchor, constant: 0).isActive = true
+        emailLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+
+        view.addSubview(emailTextField)
+        emailTextField.topAnchor.constraint(equalTo: emailLabel.topAnchor, constant: 0).isActive = true
+        emailTextField.leftAnchor.constraint(equalTo: emailLabel.rightAnchor, constant: 10).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: nameTextField.rightAnchor, constant: 0).isActive = true
+        emailTextField.bottomAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 0).isActive = true
     }
     
     private func setupNavBar() {
@@ -120,7 +188,25 @@ class AddContactController: UIViewController {
     //MARK: - Methods
     
     @objc private func handleImageGesture() {
+        let imagePicker = UIImagePickerController()
         
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            coverImageView.image = editedImage
+        } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            coverImageView.image = originalImage
+        }
+        
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func handleAddButton() {
@@ -128,7 +214,7 @@ class AddContactController: UIViewController {
         guard let name = nameTextField.text else { return }
         
         if name == "" {
-            let alert = UIAlertController(title: "Add a name", message: "You need to add a name if you want to save the contact", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Add a first name", message: "You need to add a first name to save a new contact", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Cancel", style: .default))
             present(alert, animated: true)
         } else {
@@ -137,6 +223,13 @@ class AddContactController: UIViewController {
             let contact = NSEntityDescription.insertNewObject(forEntityName: "Person", into: context)
             
             contact.setValue(name, forKey: "name")
+            contact.setValue(lastNameTextField.text, forKey: "lastName")
+            contact.setValue(phoneTextField.text, forKey: "phoneNumber")
+            contact.setValue(emailTextField.text, forKey: "email")
+            
+            if let imageData = coverImageView.image?.jpegData(compressionQuality: 0.8) {
+                contact.setValue(imageData, forKey: "profilPicture")
+            }
             
             do {
                 try context.save()
@@ -155,6 +248,4 @@ class AddContactController: UIViewController {
     @objc private func handleCancelButton() {
         dismiss(animated: true, completion: nil)
     }
-    
-
 }

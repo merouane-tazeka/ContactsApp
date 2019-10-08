@@ -12,7 +12,7 @@ class PersonCell: UICollectionViewCell {
     
     var contact: Person? {
         didSet {
-            if let name = contact?.name, let surname = contact?.surname {
+            if let name = contact?.name, let surname = contact?.lastName {
                 nameLabel.text = name + " " + surname
             } else if let name = contact?.name {
                 nameLabel.text = name
@@ -25,7 +25,7 @@ class PersonCell: UICollectionViewCell {
     
     let imageViewLabel: UIImageView = {
         let iv = UIImageView()
-//        iv.image = UIImage(named: "contactPic")
+        iv.image = UIImage(named: "user")
         iv.contentMode = .scaleAspectFill
         iv.layer.masksToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
