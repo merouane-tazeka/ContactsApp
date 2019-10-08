@@ -7,8 +7,15 @@
 //
 
 import UIKit
+import CoreData
+
+protocol AddContactControllerDelegate {
+    func didAddContact(contact: Person)
+}
 
 class AddContactController: UIViewController {
+    
+    var delegate : AddContactControllerDelegate?
     
     lazy var coverImageView: UIImageView = {
         let iv = UIImageView()
@@ -37,7 +44,7 @@ class AddContactController: UIViewController {
     
     let nameTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Enter name"
+        textField.placeholder = "enter name (required)"
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -117,7 +124,32 @@ class AddContactController: UIViewController {
     }
     
     @objc private func handleAddButton() {
-
+        
+        guard let name = nameTextField.text else { return }
+        
+        if name == "" {
+            let alert = UIAlertController(title: "Add a name", message: "You need to add a name if you want to save the contact", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default))
+            present(alert, animated: true)
+        } else {
+            let context = CoreDataManager.shared.persistantContainer.viewContext
+            
+            let contact = NSEntityDescription.insertNewObject(forEntityName: "Person", into: context)
+            
+            contact.setValue(name, forKey: "name")
+            
+            do {
+                try context.save()
+                
+                dismiss(animated: true) {
+                    self.delegate?.didAddContact(contact: contact as! Person)
+                }
+            } catch let saveErr {
+                print("Failed saving new entry: ", saveErr)
+            }
+        }
+        
+        
     }
     
     @objc private func handleCancelButton() {

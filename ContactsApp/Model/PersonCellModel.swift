@@ -10,10 +10,12 @@ import UIKit
 
 class PersonCell: UICollectionViewCell {
     
-    var contacts: Person? {
+    var contact: Person? {
         didSet {
-            if let name = contacts?.name, let surname = contacts?.surname {
+            if let name = contact?.name, let surname = contact?.surname {
                 nameLabel.text = name + " " + surname
+            } else if let name = contact?.name {
+                nameLabel.text = name
             }
 //            if let profilePicture = contacts?.profilePicture {
 //                imageViewLabel.image = UIImage(named: profilePicture)
@@ -24,7 +26,6 @@ class PersonCell: UICollectionViewCell {
     let imageViewLabel: UIImageView = {
         let iv = UIImageView()
 //        iv.image = UIImage(named: "contactPic")
-        iv.backgroundColor = .black
         iv.contentMode = .scaleAspectFill
         iv.layer.masksToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +34,7 @@ class PersonCell: UICollectionViewCell {
     
     let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "Merouane"
+        label.text = ""
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false

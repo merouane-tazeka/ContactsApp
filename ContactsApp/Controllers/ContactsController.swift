@@ -7,10 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
-class ContactsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class ContactsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, AddContactControllerDelegate {
     
-    var contacts: [Person]?
+    var contacts = [Person]()
     
     private let cellId = "cellId"
     
@@ -18,7 +19,7 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
         super.viewDidLoad()
         setupCollectionView()
         setupNavigationBar()
-        createContacts()
+        fetchContacts()
     }
     
     //MARK: - Setup Methods
@@ -35,16 +36,15 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     
     //MARK: - CollectionView Methods
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return contacts?.count ?? 1
+        return contacts.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! PersonCell
         
-        cell.contacts = contacts?[indexPath.item]
+        cell.contact = contacts[indexPath.item]
         
-        
-        
+
         return cell
     }
     
@@ -72,7 +72,10 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     @objc func handleAddButton() {
         
         let addContactController = AddContactController()
+        addContactController.delegate = self
+        
         let navController = CustomNavigationController(rootViewController: addContactController)
+        
         
         present(navController, animated: true, completion: nil)
         
@@ -80,12 +83,38 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     
     //MARK: - Other Methods
     
-    func createContacts() {
-        contacts = [Person]()
-//        let person1 = PersonModel(name: "Merouane", surname: "Tazeka")
-//        let person2 = PersonModel(name: "Islam", surname: "Ouelhi")
-//        contacts?.append(person1)
-//        contacts?.append(person2)
+    func fetchContacts() {
+        let context = CoreDataManager.shared.persistantContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<Person>(entityName: "Person")
+        
+        do {
+            let coredataContacts = try context.fetch(fetchRequest)
+            
+            contacts = coredataContacts
+            collectionView.reloadData()
+        } catch let fetchErr {
+            print("Failed fetching data from context: ", fetchErr)
+        }
+        
+        
     }
+    
+    func didAddContact(contact: Person) {
+        let newContact = contact
+        
+        contacts.append(newContact)
+        
+        let newIndexPath = IndexPath(item: contacts.count - 1, section: 0)
+        collectionView.insertItems(at: [newIndexPath])
+    }
+    
+//    func createContacts() {
+//           contacts = [Person]()
+//           let person1 = PersonModel(name: "Merouane", surname: "Tazeka")
+//           let person2 = PersonModel(name: "Islam", surname: "Ouelhi")
+//           contacts?.append(person1)
+//           contacts?.append(person2)
+//    }
 }
 
