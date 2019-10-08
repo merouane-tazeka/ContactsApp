@@ -10,7 +10,7 @@ import UIKit
 
 class ContactsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    var contacts: [PersonModel]?
+    var contacts: [Person]?
     
     private let cellId = "cellId"
     
@@ -81,11 +81,11 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     //MARK: - Other Methods
     
     func createContacts() {
-        contacts = [PersonModel]()
-        let person1 = PersonModel(name: "Merouane", surname: "Tazeka", phoneNumber: "438-875-9974", emailAdress: "tazekam@yahoo.fr", profilePicture: "merouane")
-        let person2 = PersonModel(name: "Islam", surname: "Ouelhi", phoneNumber: nil, emailAdress: nil, profilePicture: nil)
-        contacts?.append(person1)
-        contacts?.append(person2)
+        contacts = [Person]()
+//        let person1 = PersonModel(name: "Merouane", surname: "Tazeka")
+//        let person2 = PersonModel(name: "Islam", surname: "Ouelhi")
+//        contacts?.append(person1)
+//        contacts?.append(person2)
     }
 }
 

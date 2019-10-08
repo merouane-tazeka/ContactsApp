@@ -18,6 +18,8 @@
 		0E4B0276234A9AA000AB557E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4B0275234A9AA000AB557E /* Extensions.swift */; };
 		0E4B027A234AA6C600AB557E /* AddContactController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4B0279234AA6C600AB557E /* AddContactController.swift */; };
 		0E4B027C234AF4C600AB557E /* ContactDetailsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4B027B234AF4C600AB557E /* ContactDetailsController.swift */; };
+		0E777172234D34F5000E0135 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0E777170234D34F5000E0135 /* DataModel.xcdatamodeld */; };
+		0E777174234D3541000E0135 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E777173234D3541000E0135 /* CoreDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		0E4B0275234A9AA000AB557E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0E4B0279234AA6C600AB557E /* AddContactController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactController.swift; sourceTree = "<group>"; };
 		0E4B027B234AF4C600AB557E /* ContactDetailsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailsController.swift; sourceTree = "<group>"; };
+		0E777171234D34F5000E0135 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		0E777173234D3541000E0135 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +78,7 @@
 				0E400F00234A93DD006D2E93 /* LaunchScreen.storyboard */,
 				0E400F03234A93DD006D2E93 /* Info.plist */,
 				0E4B0275234A9AA000AB557E /* Extensions.swift */,
+				0E777170234D34F5000E0135 /* DataModel.xcdatamodeld */,
 			);
 			path = ContactsApp;
 			sourceTree = "<group>";
@@ -83,6 +88,7 @@
 			children = (
 				0E400EF5234A93DB006D2E93 /* AppDelegate.swift */,
 				0E400EF7234A93DB006D2E93 /* SceneDelegate.swift */,
+				0E777173234D3541000E0135 /* CoreDataManager.swift */,
 			);
 			path = "Delegate Controllers";
 			sourceTree = "<group>";
@@ -183,7 +189,9 @@
 				0E4B027A234AA6C600AB557E /* AddContactController.swift in Sources */,
 				0E400EF6234A93DB006D2E93 /* AppDelegate.swift in Sources */,
 				0E400EF8234A93DB006D2E93 /* SceneDelegate.swift in Sources */,
+				0E777172234D34F5000E0135 /* DataModel.xcdatamodeld in Sources */,
 				0E4B0274234A987B00AB557E /* PersonCellModel.swift in Sources */,
+				0E777174234D3541000E0135 /* CoreDataManager.swift in Sources */,
 				0E4B027C234AF4C600AB557E /* ContactDetailsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -382,6 +390,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		0E777170234D34F5000E0135 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				0E777171234D34F5000E0135 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = 0E777171234D34F5000E0135 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 0E400EEA234A93DB006D2E93 /* Project object */;
 }

@@ -10,14 +10,14 @@ import UIKit
 
 class PersonCell: UICollectionViewCell {
     
-    var contacts: PersonModel? {
+    var contacts: Person? {
         didSet {
             if let name = contacts?.name, let surname = contacts?.surname {
                 nameLabel.text = name + " " + surname
             }
-            if let profilePicture = contacts?.profilePicture {
-                imageViewLabel.image = UIImage(named: profilePicture)
-            }
+//            if let profilePicture = contacts?.profilePicture {
+//                imageViewLabel.image = UIImage(named: profilePicture)
+//            }
         }
     }
     

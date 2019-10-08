@@ -12,7 +12,6 @@ class AddContactController: UIViewController {
     
     lazy var coverImageView: UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .green
         iv.translatesAutoresizingMaskIntoConstraints = false
         iv.isUserInteractionEnabled = true
         iv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageGesture)))
@@ -31,9 +30,16 @@ class AddContactController: UIViewController {
     let nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Name: "
-        label.backgroundColor = .black
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    
+    let nameTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "Enter name"
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
     }()
     
     let surnameLabel: UILabel = {
@@ -53,11 +59,12 @@ class AddContactController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        setupNavBar()
     }
     
     // MARK: - SetupView Methods
     
-    func setupView() {
+    private func setupView() {
         view.backgroundColor = .backgroundColor
         navigationController?.navigationBar.barTintColor = .navBarColor
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -82,6 +89,17 @@ class AddContactController: UIViewController {
         nameLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10).isActive = true
         nameLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
         nameLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        view.addSubview(nameTextField)
+        nameTextField.topAnchor.constraint(equalTo: nameLabel.topAnchor, constant: 0).isActive = true
+        nameTextField.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 10).isActive = true
+        nameTextField.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10).isActive = true
+        nameTextField.bottomAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 0).isActive = true
+    }
+    
+    private func setupNavBar() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(handleAddButton))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancelButton))
     }
     
     private func setupImageStyle() {
@@ -94,8 +112,16 @@ class AddContactController: UIViewController {
     
     //MARK: - Methods
     
-    @objc func handleImageGesture() {
+    @objc private func handleImageGesture() {
         
+    }
+    
+    @objc private func handleAddButton() {
+
+    }
+    
+    @objc private func handleCancelButton() {
+        dismiss(animated: true, completion: nil)
     }
     
 
