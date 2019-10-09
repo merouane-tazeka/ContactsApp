@@ -17,6 +17,8 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
     
     var delegate : AddContactControllerDelegate?
     
+    var imageToSave: UIImage?
+    
     lazy var coverImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(named: "user")
@@ -75,7 +77,8 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
     
     let phoneTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Phone Number"
+        textField.placeholder = "(xxx)xxx-xxxx"
+        textField.keyboardType = .numberPad
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -90,7 +93,8 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
     
     let emailTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "Email Address"
+        textField.placeholder = "Example@icloud.com"
+        textField.keyboardType = .emailAddress
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -112,8 +116,8 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
         view.addSubview(coverImageView)
         coverImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 15).isActive = true
         coverImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        coverImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        coverImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        coverImageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        coverImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         setupImageStyle()
         
         view.addSubview(tapToChoosePictureLabel)
@@ -177,7 +181,7 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
     }
     
     private func setupImageStyle() {
-        coverImageView.layer.cornerRadius = coverImageView.frame.width / 2 == 0 ? 75 : coverImageView.frame.width / 2
+        coverImageView.layer.cornerRadius = coverImageView.frame.width / 2 == 0 ? 50 : coverImageView.frame.width / 2
         coverImageView.layer.borderColor = UIColor.black.cgColor
         coverImageView.layer.masksToBounds = true
         coverImageView.layer.borderWidth = 1
@@ -201,8 +205,10 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             coverImageView.image = editedImage
+            imageToSave = editedImage
         } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             coverImageView.image = originalImage
+            imageToSave = originalImage
         }
         
         dismiss(animated: true, completion: nil)
@@ -213,9 +219,7 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
         guard let name = nameTextField.text else { return }
         
         if name == "" {
-            let alert = UIAlertController(title: "Add a first name", message: "You need to add a first name to save a new contact", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .default))
-            present(alert, animated: true)
+            pushAlert(title: "Add a first name", message: "You need to add a first name to save a new contact", action: "Cancel")
         } else {
             let context = CoreDataManager.shared.persistantContainer.viewContext
             
@@ -223,11 +227,14 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
             
             contact.setValue(name, forKey: "name")
             contact.setValue(lastNameTextField.text, forKey: "lastName")
-            contact.setValue(phoneTextField.text, forKey: "phoneNumber")
-            contact.setValue(emailTextField.text, forKey: "email")
             
-            if let imageData = coverImageView.image?.jpegData(compressionQuality: 0.8) {
-                contact.setValue(imageData, forKey: "profilPicture")
+            guard verifyEnteredNumber(contact: contact) else { return }
+            guard verifyEnteredEmail(contact: contact) else { return }
+            
+            if let image = imageToSave {
+                if let imageData = image.jpegData(compressionQuality: 0.8) {
+                    contact.setValue(imageData, forKey: "profilPicture")
+                }
             }
             
             do {
@@ -247,4 +254,51 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
     @objc private func handleCancelButton() {
         dismiss(animated: true, completion: nil)
     }
+    
+    private func pushAlert(title: String, message: String, action: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: action, style: .default))
+        present(alert, animated: true)
+    }
+
+    //MARK: - Verification Methods
+    
+    private func verifyEnteredNumber(contact: NSManagedObject) -> Bool {
+        if let phoneNumber = phoneTextField.text {
+            if phoneNumber != "" {
+                var phoneNumberToSave = ""
+                for (index, number) in phoneNumber.enumerated() {
+                    if index % 3 == 0 {
+                        phoneNumberToSave += " " + String(number)
+                    } else {
+                        phoneNumberToSave += String(number)
+                    }
+                }
+                
+                if phoneNumberToSave.count != 14 {
+                    pushAlert(title: "Insert a valid phone number (10 numbers)", message: "Phone style: xxxxxxxxxx", action: "Cancel")
+                    return false
+                }
+                
+                contact.setValue(phoneNumberToSave, forKey: "phoneNumber")
+                
+            }
+        }
+        return true
+    }
+    
+    private func verifyEnteredEmail(contact: NSManagedObject) -> Bool {
+        if let enteredText = emailTextField.text {
+            if enteredText != "" {
+                if enteredText.contains("@") {
+                    contact.setValue(enteredText, forKey: "email")
+                } else {
+                    pushAlert(title: "Enter a valid email address", message: "", action: "Cancel")
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
 }

@@ -58,9 +58,12 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let contactDetailsController = ContactDetailsController()
-        let navController = CustomNavigationController(rootViewController: contactDetailsController)
+        let contact = contacts[indexPath.item]
         
+        let contactDetailsController = ContactDetailsController()
+        contactDetailsController.contact = contact
+        let navController = CustomNavigationController(rootViewController: contactDetailsController)
+
         present(navController, animated: true, completion: nil)
         
     }
