@@ -109,7 +109,6 @@ class AddContactController: UIViewController, UIImagePickerControllerDelegate, U
         navigationController?.navigationBar.prefersLargeTitles = false
         navigationItem.title = "Add new contact"
         
-        
         view.addSubview(coverImageView)
         coverImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 15).isActive = true
         coverImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

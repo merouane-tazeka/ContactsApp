@@ -26,7 +26,15 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     
     func setupNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(handleAddButton))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Options", style: .plain, target: self, action: #selector(handleOptionButton))
+        
+        let customButton = UIButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        customButton.setImage(UIImage(named: "menu-button")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        customButton.addTarget(self, action: #selector(handleOptionButton), for: .touchUpInside)
+        let customBarButton = UIBarButtonItem(customView: customButton)
+        customBarButton.customView?.heightAnchor.constraint(equalToConstant: 24).isActive = true
+        customBarButton.customView?.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        
+        navigationItem.leftBarButtonItem = customBarButton
         navigationItem.title = "Contacts"
     }
     
@@ -42,9 +50,8 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! PersonCell
-        
-        cell.contact = contacts[indexPath.item]
-        
+        let contact = contacts[indexPath.item]
+        cell.contact = contact
 
         return cell
     }
@@ -86,6 +93,7 @@ class ContactsController: UICollectionViewController, UICollectionViewDelegateFl
         
         let alert = UIAlertController(title: "Select an option", message: nil, preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Delete all contacts", style: .default, handler: handlerDeleteAll))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         present(alert, animated: true)
     }

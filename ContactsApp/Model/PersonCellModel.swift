@@ -17,9 +17,9 @@ class PersonCell: UICollectionViewCell {
             } else if let name = contact?.name {
                 nameLabel.text = name
             }
-//            if let profilePicture = contacts?.profilePicture {
-//                imageViewLabel.image = UIImage(named: profilePicture)
-//            }
+            if let profilePicture = contact?.profilPicture {
+                imageViewLabel.image = UIImage(data: profilePicture)
+            }
         }
     }
     
@@ -27,6 +27,8 @@ class PersonCell: UICollectionViewCell {
         let iv = UIImageView()
         iv.image = UIImage(named: "user")
         iv.contentMode = .scaleAspectFill
+        iv.layer.borderColor = UIColor.black.cgColor
+        iv.layer.borderWidth = 1
         iv.layer.masksToBounds = true
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
