@@ -1,8 +1,8 @@
 # ContactsApp
 
-![](./Gif_Images/animation1.gif)
-![](./Gif_Images/animation2.gif)
-![](./Gif_Images/animation3.gif)
+![](./animation1.gif)
+![](./animation2.gif)
+![](./animation3.gif)
 
 # Table of Contents
 * I.	  General info
